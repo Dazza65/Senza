@@ -1,3 +1,20 @@
 plugins {
     id 'java'
+    id 'java-library'
+    id 'war'
 }
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.25.1'
+}
+
+project.webAppDirName = 'WebContent'
