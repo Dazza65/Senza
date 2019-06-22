@@ -11,6 +11,9 @@ public class Song {
     private String artist;
     private String title;
 
+    public Song() {
+    }
+
     public String getTitle() {
         return title;
     }
