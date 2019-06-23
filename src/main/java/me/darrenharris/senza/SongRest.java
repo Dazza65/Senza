@@ -18,20 +18,20 @@ public class SongRest {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String sayPlainTextHello() {
+    public String getPlainSongs() {
         return "Hello Jersey";
     }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public String sayHtmlHello() {
+    public String getHtmlSongs() {
         SongService service = new SongService();
 
         List<Song> results = service.findStartsWith("Run");
 
         StringBuffer resultStrBuf = new StringBuffer();
 
-        resultStrBuf.append("<html><body><h1>Songs</h1><table><th>Title</th><th>Artist</th>");
+        resultStrBuf.append("<html><body><h2>Songs</h2><table><th>Title</th><th>Artist</th>");
 
         for (Song song : results) {
             resultStrBuf.append("<tr>");
@@ -39,7 +39,9 @@ public class SongRest {
             resultStrBuf.append("</tr>");
         }
 
-        return("</table></body></html>");
+        resultStrBuf.append("</table></body></html>");
+
+        return resultStrBuf.toString();
     }
 
 }
