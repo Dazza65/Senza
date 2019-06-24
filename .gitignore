@@ -1,3 +1,4 @@
 *.class
 .gradle/*
 build/*
+data/lastfm_subset/*
