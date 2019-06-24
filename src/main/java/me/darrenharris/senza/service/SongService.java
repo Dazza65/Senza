@@ -1,14 +1,16 @@
 package me.darrenharris.senza.service;
 
+import static com.mongodb.client.model.Filters.eq;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.Block;
-import com.mongodb.async.SingleResultCallback;
-import com.mongodb.async.client.MongoClient;
-import com.mongodb.async.client.MongoClients;
-import com.mongodb.async.client.MongoCollection;
-import com.mongodb.async.client.MongoDatabase;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
 
@@ -18,30 +20,20 @@ import me.darrenharris.senza.domain.Song;
  * SongService
  */
 public class SongService {
-    
-    SingleResultCallback<Void> callbackWhenFinished = new SingleResultCallback<Void>() {
-        @Override
-        public void onResult(final Void result, final Throwable t) {
-            System.out.println("Operation Finished!");
-        }
-    };
-
-    Block<Document> printBlock = new Block<Document>() {
-        @Override
-        public void apply(final Document document) {
-            System.out.println(document.toJson());
-        }
-    };
 
     public List<Song> findStartsWith(String expString) {
         List<Song> results = new ArrayList<>();
+        Gson gson = new GsonBuilder().create();
 
         MongoClient mongoClient = MongoClients.create();
         MongoDatabase database = mongoClient.getDatabase("music");
         MongoCollection<Document> collection = database.getCollection("songs");
 
-        collection.find(new Document()).
-            forEach(printBlock, callbackWhenFinished);
+        Document doc = collection.find(eq("title", "Run a Mile")).first();
+
+        Song song = gson.fromJson(doc.toJson(), Song.class);
+
+        results.add(song);
 
         return results;
     }
