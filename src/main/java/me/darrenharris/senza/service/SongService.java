@@ -1,6 +1,6 @@
 package me.darrenharris.senza.service;
 
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.regex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 
 import me.darrenharris.senza.domain.Song;
@@ -21,6 +23,8 @@ import me.darrenharris.senza.domain.Song;
  */
 public class SongService {
 
+    private static final Logger LOGGER = LogManager.getLogger(SongService.class.getName());
+
     public List<Song> findStartsWith(String expString) {
         List<Song> results = new ArrayList<>();
         Gson gson = new GsonBuilder().create();
@@ -29,12 +33,18 @@ public class SongService {
         MongoDatabase database = mongoClient.getDatabase("music");
         MongoCollection<Document> collection = database.getCollection("songs");
 
-        Document doc = collection.find(eq("title", "Run a Mile")).first();
+        String pattern = "^Talk";
 
-        Song song = gson.fromJson(doc.toJson(), Song.class);
+        LOGGER.debug("Performing find for title: " + pattern);
+        Document doc = collection.find(regex("title", pattern)).first();
 
-        results.add(song);
+        if( doc != null ) {
+            LOGGER.debug("Got result");
+            Song song = gson.fromJson(doc.toJson(), Song.class);
 
+            results.add(song);
+        }
+        LOGGER.debug("return results: " + results.size());
         return results;
     }
 
