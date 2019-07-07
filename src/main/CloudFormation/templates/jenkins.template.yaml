@@ -14,19 +14,15 @@ Resources:
       AWS::CloudFormation::Init:
         config:
           commands:
-            createFile:
-              command: echo MAGIC > test.txt
-              cwd: "~"
-          files: 
-            /tmp/setup.mysql: 
-              content: !Sub | 
-                CREATE DATABASE test;
-                CREATE USER 'dazza'@'localhost' IDENTIFIED BY 'testpwd';
-                GRANT ALL ON test.* TO 'dazza'@'localhost';
-                FLUSH PRIVILEGES;
-              mode: "000644"
-              owner: "root"
-              group: "root"
+            addJenkinsRepo:
+              command: wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+            importPublicKey:
+              command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+          packages:
+            yum:
+              java-1.8.0-openjdk-devel: []
+              git: []
+              jenkins: []
     Properties: 
       ImageId: 'ami-0dc96254d5535925f'
       InstanceType: 't2.micro'
@@ -43,6 +39,9 @@ Resources:
           - ''
           - - |
               #!/bin/bash -xe
+            - |
+              # Update the helper scripts
+            - 'yum install -y aws-cfn-bootstrap'
             - |
               # Install the files and packages from the metadata
             - '/opt/aws/bin/cfn-init -v '
