@@ -28,9 +28,16 @@ The non-serverless architecture is going to use Jenkins and the CI/CD delivery p
 1. Start Jenkins `sudo service jenkins start`
 1. Configure to start Jenkins on server start `sudo systemctl enable jenkins.service`
 1. Unlock Jenkins 'http://\<public-ip\>:8080/' - copy key from file specified
+1. Configure GitHub webhook to trigger Jenkins build (TBC)
+1. Create Jenkins build (TBC)
 
 ### Data Repository Setup
 To be completed
+
+### Project Setup
+#### Fork GitHub repo
+#### Clone repository
+
 
 ## Setup (Serverless)
 To be completed
