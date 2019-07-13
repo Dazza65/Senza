@@ -13,16 +13,16 @@ Resources:
     Metadata:
       AWS::CloudFormation::Init:
         config:
-          commands:
-            addJenkinsRepo:
-              command: wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-            importPublicKey:
-              command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
           packages:
             yum:
               java-1.8.0-openjdk-devel: []
               git: []
               jenkins: []
+          commands:
+            addJenkinsRepo:
+              command: wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+            importPublicKey:
+              command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
     Properties: 
       ImageId: 'ami-0dc96254d5535925f'
       InstanceType: 't2.micro'
@@ -39,10 +39,10 @@ Resources:
           - ''
           - - |
               #!/bin/bash -xe
-            - |
               # Update the helper scripts
-            - 'yum install -y aws-cfn-bootstrap'
-            - |
+              yum install -y aws-cfn-bootstrap
+              wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+              rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
               # Install the files and packages from the metadata
             - '/opt/aws/bin/cfn-init -v '
             - '         --stack '
