@@ -29,7 +29,10 @@ Resources:
   SubnetA:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: ap-southeast-2a
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs 
+          Ref: 'AWS::Region'
       VpcId: !Ref VPC
       CidrBlock: !Select [0, !Cidr [ !Join [ '', [!Ref MyVpcCIDR, '/16']], 16, 12]]
       MapPublicIpOnLaunch: true
@@ -68,14 +71,14 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       SubnetId: !Ref SubnetB
-Outputs:
-  BuildVPC:
-    Description: VPC ID for the build server
-    Value: !Ref VPC
-    Export:
-      Name: !Join [ ":", [ !Ref "AWS::StackName", BuildVpcID ] ]
-  PublicSubnetCIDR:
-    Description: CIDR block of the public subnet
-    Value: !Ref SubnetA
-    Export:
-      Name: !Join [ ":", [ !Ref "AWS::StackName", PublicSubnetCIDR ] ]
+# Outputs:
+#  BuildVPC:
+#    Description: VPC ID for the build server
+#    Value: !Ref VPC
+#    Export:
+#      Name: !Join [ ":", [ !Ref "AWS::StackName", BuildVpcID ] ]
+#  PublicSubnetCIDR:
+#    Description: CIDR block of the public subnet
+#    Value: !Ref SubnetA
+#    Export:
+#      Name: !Join [ ":", [ !Ref "AWS::StackName", PublicSubnetCIDR ] ]
